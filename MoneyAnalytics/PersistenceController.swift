@@ -15,14 +15,14 @@ struct PersistenceController {
         let viewContext = result.container.viewContext
         // Создание примеров данных для предпросмотра
         let newIncome = Income(context: viewContext)
-        newIncome.amount = 1000.0
+        newIncome.amount = 0.0
 
         let newExpense = Expense(context: viewContext)
-        newExpense.amount = 200.0
+        newExpense.amount = 0.0
         newExpense.category = "Food"
 
         let newMandatoryExpense = MandatoryExpense(context: viewContext)
-        newMandatoryExpense.amount = 500.0
+        newMandatoryExpense.amount = 0.0
         newMandatoryExpense.category = "Rent"
 
         do {
