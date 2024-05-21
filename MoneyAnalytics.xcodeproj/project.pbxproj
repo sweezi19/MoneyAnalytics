@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		91460A7D2BFCF2010078A5CC /* ExpenseTrackerModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 91460A7B2BFCF2010078A5CC /* ExpenseTrackerModel.xcdatamodeld */; };
 		917182AE2BF80B50002E0797 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 917182AD2BF80B50002E0797 /* PersistenceController.swift */; };
 		918F2FDF2BF7BA530094F9F3 /* MoneyAnalyticsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 918F2FDE2BF7BA530094F9F3 /* MoneyAnalyticsApp.swift */; };
 		918F2FE12BF7BA530094F9F3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 918F2FE02BF7BA530094F9F3 /* ContentView.swift */; };
@@ -20,6 +19,8 @@
 		918F300D2BF7BC780094F9F3 /* AddExpenseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 918F300C2BF7BC780094F9F3 /* AddExpenseView.swift */; };
 		918F300F2BF7BD8B0094F9F3 /* AddIncomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 918F300E2BF7BD8B0094F9F3 /* AddIncomeView.swift */; };
 		91CDFCAA2BF8DD3900A893C5 /* ExpenseDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91CDFCA92BF8DD3900A893C5 /* ExpenseDetailView.swift */; };
+		91D4D5812BFD40710065C72B /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D4D5802BFD40710065C72B /* Models.swift */; };
+		91D4D5832BFD50C90065C72B /* Сurrencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D4D5822BFD50C90065C72B /* Сurrencies.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,7 +41,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		91460A7C2BFCF2010078A5CC /* ExpenseTrackerModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ExpenseTrackerModel.xcdatamodel; sourceTree = "<group>"; };
 		917182AD2BF80B50002E0797 /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
 		918F2FDB2BF7BA530094F9F3 /* MoneyAnalytics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MoneyAnalytics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		918F2FDE2BF7BA530094F9F3 /* MoneyAnalyticsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyAnalyticsApp.swift; sourceTree = "<group>"; };
@@ -56,6 +56,8 @@
 		918F300C2BF7BC780094F9F3 /* AddExpenseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExpenseView.swift; sourceTree = "<group>"; };
 		918F300E2BF7BD8B0094F9F3 /* AddIncomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddIncomeView.swift; sourceTree = "<group>"; };
 		91CDFCA92BF8DD3900A893C5 /* ExpenseDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseDetailView.swift; sourceTree = "<group>"; };
+		91D4D5802BFD40710065C72B /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		91D4D5822BFD50C90065C72B /* Сurrencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Сurrencies.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,10 +119,11 @@
 			children = (
 				918F2FDE2BF7BA530094F9F3 /* MoneyAnalyticsApp.swift */,
 				918F2FE02BF7BA530094F9F3 /* ContentView.swift */,
+				91D4D5822BFD50C90065C72B /* Сurrencies.swift */,
 				91CDFCA92BF8DD3900A893C5 /* ExpenseDetailView.swift */,
 				917182B62BF81324002E0797 /* Views */,
 				917182AD2BF80B50002E0797 /* PersistenceController.swift */,
-				91460A7B2BFCF2010078A5CC /* ExpenseTrackerModel.xcdatamodeld */,
+				91D4D5802BFD40710065C72B /* Models.swift */,
 				918F2FE22BF7BA530094F9F3 /* Item.swift */,
 				918F2FE42BF7BA540094F9F3 /* Assets.xcassets */,
 				918F2FE62BF7BA540094F9F3 /* Preview Content */,
@@ -283,13 +286,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				91460A7D2BFCF2010078A5CC /* ExpenseTrackerModel.xcdatamodeld in Sources */,
 				918F2FE12BF7BA530094F9F3 /* ContentView.swift in Sources */,
 				91CDFCAA2BF8DD3900A893C5 /* ExpenseDetailView.swift in Sources */,
 				918F300D2BF7BC780094F9F3 /* AddExpenseView.swift in Sources */,
 				918F300F2BF7BD8B0094F9F3 /* AddIncomeView.swift in Sources */,
 				918F2FE32BF7BA530094F9F3 /* Item.swift in Sources */,
+				91D4D5812BFD40710065C72B /* Models.swift in Sources */,
 				918F2FDF2BF7BA530094F9F3 /* MoneyAnalyticsApp.swift in Sources */,
+				91D4D5832BFD50C90065C72B /* Сurrencies.swift in Sources */,
 				917182AE2BF80B50002E0797 /* PersistenceController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -620,20 +624,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		91460A7B2BFCF2010078A5CC /* ExpenseTrackerModel.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				91460A7C2BFCF2010078A5CC /* ExpenseTrackerModel.xcdatamodel */,
-			);
-			currentVersion = 91460A7C2BFCF2010078A5CC /* ExpenseTrackerModel.xcdatamodel */;
-			name = ExpenseTrackerModel.xcdatamodeld;
-			path = /Users/theotar/Documents/Code/MoneyAnalytics/MoneyAnalytics/MoneyAnalytics/ExpenseTrackerModel.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = 918F2FD32BF7BA530094F9F3 /* Project object */;
 }

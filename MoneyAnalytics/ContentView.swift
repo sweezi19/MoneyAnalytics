@@ -6,21 +6,16 @@
 //
 
 import SwiftUI
-import CoreData
+import SwiftData
 
 struct ContentView: View {
-    @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.modelContext) private var viewContext
     @State private var balance: Double = 0.0
+    @State private var selectedCurrency: String = "$"
+    @State private var showCurrencyPicker = false
 
-    @FetchRequest(
-        entity: Income.entity(),
-        sortDescriptors: [NSSortDescriptor(keyPath: \Income.amount, ascending: true)]
-    ) var incomes: FetchedResults<Income>
-
-    @FetchRequest(
-        entity: Expense.entity(),
-        sortDescriptors: [NSSortDescriptor(keyPath: \Expense.amount, ascending: true)]
-    ) var expenses: FetchedResults<Expense>
+    @Query var incomes: [Income]
+    @Query var expenses: [Expense]
 
     @State private var showAddIncome = false
     @State private var showAddExpense = false
@@ -29,77 +24,94 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Text("Current Balance: \(balance, specifier: "%.2f") $")
+                Text("Current Balance: \(balance, specifier: "%.2f") \(selectedCurrency)")
                     .font(.largeTitle)
                     .padding()
 
-                Button(action: {
-                    withAnimation {
-                        isMenuOpen.toggle()
-                    }
-                }) {
-                    Image(systemName: "plus.circle.fill")
-                        .resizable()
-                        .frame(width: 50, height: 50)
-                        .foregroundColor(isMenuOpen ? .red : .blue)
-                        .rotationEffect(Angle(degrees: isMenuOpen ? 45 : 0))
-                        .animation(.spring(), value: isMenuOpen)
-                        .padding()
-                }
-
-                if isMenuOpen {
-                    VStack(spacing: 10) {
+                HStack {
+                    if isMenuOpen {
                         Button(action: {
                             showAddIncome = true
                             isMenuOpen = false
                         }) {
-                            Text("Add Income")
-                                .font(.title2)
-                                .padding()
-                                .background(Color.blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(10)
+                            Image(systemName: "arrow.down.circle")
+                                .resizable()
+                                .frame(width: 40, height: 40)
+                                .foregroundColor(.green)
+                                .padding(.trailing, 10)
                         }
+                    }
 
+                    Button(action: {
+                        withAnimation {
+                            isMenuOpen.toggle()
+                        }
+                    }) {
+                        Image(systemName: "plus.circle.fill")
+                            .resizable()
+                            .frame(width: 50, height: 50)
+                            .foregroundColor(isMenuOpen ? .red : .blue)
+                            .rotationEffect(Angle(degrees: isMenuOpen ? 45 : 0))
+                            .animation(.spring(), value: isMenuOpen)
+                            .padding()
+                    }
+
+                    if isMenuOpen {
                         Button(action: {
                             showAddExpense = true
                             isMenuOpen = false
                         }) {
-                            Text("Add Expense")
-                                .font(.title2)
-                                .padding()
-                                .background(Color.blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(10)
+                            Image(systemName: "arrow.up.circle")
+                                .resizable()
+                                .frame(width: 40, height: 40)
+                                .foregroundColor(.red)
+                                .padding(.leading, 10)
                         }
                     }
-                    .transition(.opacity)
                 }
 
-                List {
-                    ForEach(incomes, id: \.self) { income in
-                        HStack {
-                            Text("+\(income.amount, specifier: "%.2f") $")
-                                .foregroundColor(.green)
-                            Spacer()
-                        }
-                    }
-                    .onDelete(perform: deleteIncome)
-
-                    ForEach(expenses, id: \.self) { expense in
-                        NavigationLink(destination: ExpenseDetailView(amount: expense.amount, category: expense.category)) {
+                if incomes.isEmpty && expenses.isEmpty {
+                    Spacer()
+                    Text("No transactions yet")
+                        .font(.title)
+                        .foregroundColor(.gray)
+                    Spacer()
+                } else {
+                    List {
+                        ForEach(incomes) { income in
                             HStack {
-                                Text("-\(expense.amount, specifier: "%.2f") $")
-                                    .foregroundColor(.red)
+                                Text("+\(income.amount, specifier: "%.2f") \(selectedCurrency)")
+                                    .foregroundColor(.green)
                                 Spacer()
                             }
                         }
+                        .onDelete(perform: deleteIncome)
+
+                        ForEach(expenses) { expense in
+                            NavigationLink(destination: ExpenseDetailView(amount: expense.amount, category: expense.category)) {
+                                HStack {
+                                    Text("-\(expense.amount, specifier: "%.2f") \(selectedCurrency)")
+                                        .foregroundColor(.red)
+                                    Spacer()
+                                }
+                            }
+                        }
+                        .onDelete(perform: deleteExpense)
                     }
-                    .onDelete(perform: deleteExpense)
                 }
-                .navigationBarItems(trailing: EditButton())
             }
             .navigationBarTitle("Expense Tracker", displayMode: .inline)
+            .navigationBarItems(trailing: Button(action: {
+                showCurrencyPicker.toggle()
+            }) {
+                Text(selectedCurrency)
+                    .font(.title2)
+                    .padding()
+                    .cornerRadius(8)
+            })
+            .sheet(isPresented: $showCurrencyPicker) {
+                CurrencyPickerView(selectedCurrency: $selectedCurrency, showCurrencyPicker: $showCurrencyPicker, currencies: currencies)
+            }
             .sheet(isPresented: $showAddIncome) {
                 AddIncomeView(balance: $balance)
             }
@@ -136,8 +148,36 @@ struct ContentView: View {
     }
 }
 
+struct CurrencyPickerView: View {
+    @Binding var selectedCurrency: String
+    @Binding var showCurrencyPicker: Bool
+    let currencies: [(String, String)]
+
+    var body: some View {
+        NavigationView {
+            List {
+                ForEach(currencies, id: \.0) { currency in
+                    Button(action: {
+                        selectedCurrency = currency.0
+                        showCurrencyPicker = false
+                    }) {
+                        HStack {
+                            Text(currency.0)
+                            Text(currency.1)
+                                .foregroundColor(.gray)
+                        }
+                        .foregroundColor(currency.0 == selectedCurrency ? .blue : .primary)
+                    }
+                }
+            }
+            .navigationBarTitle("Select Currency", displayMode: .inline)
+        }
+    }
+}
+
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        ContentView()
+            .modelContainer(for: [Income.self, Expense.self])
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct MoneyAnalyticsApp: App {
@@ -14,9 +15,7 @@ struct MoneyAnalyticsApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                .modelContainer(for: [Income.self, Expense.self], inMemory: false)
         }
     }
 }
-
-
