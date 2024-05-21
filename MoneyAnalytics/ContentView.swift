@@ -22,13 +22,7 @@ struct ContentView: View {
         sortDescriptors: [NSSortDescriptor(keyPath: \Expense.amount, ascending: true)]
     ) var expenses: FetchedResults<Expense>
 
-    @FetchRequest(
-        entity: MandatoryExpense.entity(),
-        sortDescriptors: [NSSortDescriptor(keyPath: \MandatoryExpense.amount, ascending: true)]
-    ) var mandatoryExpenses: FetchedResults<MandatoryExpense>
-
     @State private var showAddIncome = false
-    @State private var showAddMandatoryExpense = false
     @State private var showAddExpense = false
     @State private var isMenuOpen = false
 
@@ -39,36 +33,47 @@ struct ContentView: View {
                     .font(.largeTitle)
                     .padding()
 
-                Menu {
-                    Button(action: {
-                        showAddIncome = true
-                        isMenuOpen = false
-                    }) {
-                        Text("Add Income")
+                Button(action: {
+                    withAnimation {
+                        isMenuOpen.toggle()
                     }
-                    Button(action: {
-                        showAddMandatoryExpense = true
-                        isMenuOpen = false
-                    }) {
-                        Text("Add Mandatory Expense")
-                    }
-                    Button(action: {
-                        showAddExpense = true
-                        isMenuOpen = false
-                    }) {
-                        Text("Add Expense")
-                    }
-                } label: {
+                }) {
                     Image(systemName: "plus.circle.fill")
                         .resizable()
                         .frame(width: 50, height: 50)
                         .foregroundColor(isMenuOpen ? .red : .blue)
                         .rotationEffect(Angle(degrees: isMenuOpen ? 45 : 0))
                         .animation(.spring(), value: isMenuOpen)
-                        .onTapGesture {
-                            isMenuOpen.toggle()
-                        }
                         .padding()
+                }
+
+                if isMenuOpen {
+                    VStack(spacing: 10) {
+                        Button(action: {
+                            showAddIncome = true
+                            isMenuOpen = false
+                        }) {
+                            Text("Add Income")
+                                .font(.title2)
+                                .padding()
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+                        }
+
+                        Button(action: {
+                            showAddExpense = true
+                            isMenuOpen = false
+                        }) {
+                            Text("Add Expense")
+                                .font(.title2)
+                                .padding()
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+                        }
+                    }
+                    .transition(.opacity)
                 }
 
                 List {
@@ -91,26 +96,12 @@ struct ContentView: View {
                         }
                     }
                     .onDelete(perform: deleteExpense)
-
-                    ForEach(mandatoryExpenses, id: \.self) { expense in
-                        NavigationLink(destination: ExpenseDetailView(amount: expense.amount, category: expense.category)) {
-                            HStack {
-                                Text("-\(expense.amount, specifier: "%.2f") $")
-                                    .foregroundColor(.red)
-                                Spacer()
-                            }
-                        }
-                    }
-                    .onDelete(perform: deleteMandatoryExpense)
                 }
                 .navigationBarItems(trailing: EditButton())
             }
             .navigationBarTitle("Expense Tracker", displayMode: .inline)
             .sheet(isPresented: $showAddIncome) {
                 AddIncomeView(balance: $balance)
-            }
-            .sheet(isPresented: $showAddMandatoryExpense) {
-                AddMandatoryExpenseView(balance: $balance)
             }
             .sheet(isPresented: $showAddExpense) {
                 AddExpenseView(balance: $balance)
@@ -141,19 +132,6 @@ struct ContentView: View {
             try viewContext.save()
         } catch {
             print("Failed to delete expense: \(error.localizedDescription)")
-        }
-    }
-
-    private func deleteMandatoryExpense(at offsets: IndexSet) {
-        for index in offsets {
-            let expense = mandatoryExpenses[index]
-            balance += expense.amount  // Возвращаем сумму на баланс
-            viewContext.delete(expense)
-        }
-        do {
-            try viewContext.save()
-        } catch {
-            print("Failed to delete mandatory expense: \(error.localizedDescription)")
         }
     }
 }

@@ -21,10 +21,6 @@ struct PersistenceController {
         newExpense.amount = 0.0
         newExpense.category = "Food"
 
-        let newMandatoryExpense = MandatoryExpense(context: viewContext)
-        newMandatoryExpense.amount = 0.0
-        newMandatoryExpense.category = "Rent"
-
         do {
             try viewContext.save()
         } catch {
