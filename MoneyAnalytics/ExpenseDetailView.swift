@@ -13,11 +13,8 @@ struct ExpenseDetailView: View {
     
     var body: some View {
         VStack {
-            Text("Expense Details")
-                .font(.largeTitle)
-                .padding()
-            
-            Text("Amount: \(amount, specifier: "%.2f") $")
+            // Отображение суммы и валюты
+            Text("Amount: \(amount, specifier: "%.2f") \(currency)")
                 .font(.title)
                 .padding()
             
