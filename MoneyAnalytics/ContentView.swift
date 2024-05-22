@@ -24,7 +24,7 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Text("Current Balance: \(balance, specifier: "%.2f") \(selectedCurrency)")
+                Text("Balance: \(balance, specifier: "%.2f") \(selectedCurrency)")
                     .font(.largeTitle)
                     .padding()
 
