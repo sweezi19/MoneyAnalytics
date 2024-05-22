@@ -5,31 +5,46 @@
 //  Created by Theo Tar on 17/05/2024.
 //
 
+// Импортируем необходимые модули. SwiftUI используется для создания пользовательского интерфейса, а SwiftData для работы с базой данных и моделями.
 import SwiftUI
 import SwiftData
 
 struct ContentView: View {
+    // Используем модельный контекст для работы с Core Data (или SwiftData)
     @Environment(\.modelContext) private var viewContext
+
+    // Переменная для хранения баланса
     @State private var balance: Double = 0.0
+
+    // Переменная для хранения выбранной валюты
     @State private var selectedCurrency: String = "$"
+
+    // Переменная для управления отображением окна выбора валюты
     @State private var showCurrencyPicker = false
 
+    // Запросы для получения данных о доходах и расходах из базы данных
     @Query var incomes: [Income]
     @Query var expenses: [Expense]
 
+    // Переменные для управления отображением окон добавления доходов и расходов
     @State private var showAddIncome = false
     @State private var showAddExpense = false
+
+    // Переменная для управления состоянием меню добавления
     @State private var isMenuOpen = false
 
     var body: some View {
         NavigationView {
             VStack {
+                // Отображение текущего баланса
                 Text("Balance: \(balance, specifier: "%.2f") \(selectedCurrency)")
                     .font(.largeTitle)
                     .padding()
 
+                // Кнопки
                 HStack {
                     if isMenuOpen {
+                        // Кнопка для добавления доходов
                         Button(action: {
                             showAddIncome = true
                             isMenuOpen = false
@@ -41,7 +56,7 @@ struct ContentView: View {
                                 .padding(.trailing, 10)
                         }
                     }
-
+                    // Кнопка (+)
                     Button(action: {
                         withAnimation {
                             isMenuOpen.toggle()
@@ -57,6 +72,7 @@ struct ContentView: View {
                     }
 
                     if isMenuOpen {
+                        // Кнопка для добавления расходов
                         Button(action: {
                             showAddExpense = true
                             isMenuOpen = false
@@ -70,6 +86,7 @@ struct ContentView: View {
                     }
                 }
 
+                // Отображение списка транзакций или сообщения об отсутствии транзакций
                 if incomes.isEmpty && expenses.isEmpty {
                     Spacer()
                     Text("No transactions yet")
@@ -78,6 +95,7 @@ struct ContentView: View {
                     Spacer()
                 } else {
                     List {
+                        // Отображение доходов
                         ForEach(incomes) { income in
                             HStack {
                                 Text("+\(income.amount, specifier: "%.2f") \(selectedCurrency)")
@@ -87,8 +105,9 @@ struct ContentView: View {
                         }
                         .onDelete(perform: deleteIncome)
 
+                        // Отображение расходов
                         ForEach(expenses) { expense in
-                            NavigationLink(destination: ExpenseDetailView(amount: expense.amount, category: expense.category)) {
+                            NavigationLink(destination: ExpenseDetailView(amount: expense.amount, category: expense.category, currency: selectedCurrency)) {
                                 HStack {
                                     Text("-\(expense.amount, specifier: "%.2f") \(selectedCurrency)")
                                         .foregroundColor(.red)
@@ -100,27 +119,32 @@ struct ContentView: View {
                     }
                 }
             }
+            // Установка заголовка навигационной панели
             .navigationBarTitle("Expense Tracker", displayMode: .inline)
+            // Кнопка выбора валюты
             .navigationBarItems(trailing: Button(action: {
                 showCurrencyPicker.toggle()
             }) {
                 Text(selectedCurrency)
                     .font(.title2)
                     .padding()
-                    .cornerRadius(8)
             })
             .sheet(isPresented: $showCurrencyPicker) {
+                // Отображение окна выбора валюты
                 CurrencyPickerView(selectedCurrency: $selectedCurrency, showCurrencyPicker: $showCurrencyPicker, currencies: currencies)
             }
             .sheet(isPresented: $showAddIncome) {
+                // Отображение окна добавления доходов
                 AddIncomeView(balance: $balance)
             }
             .sheet(isPresented: $showAddExpense) {
+                // Отображение окна добавления расходов
                 AddExpenseView(balance: $balance)
             }
         }
     }
 
+    // Удаление дохода и обновление баланса
     private func deleteIncome(at offsets: IndexSet) {
         for index in offsets {
             let income = incomes[index]
@@ -134,6 +158,7 @@ struct ContentView: View {
         }
     }
 
+    // Удаление расхода и обновление баланса
     private func deleteExpense(at offsets: IndexSet) {
         for index in offsets {
             let expense = expenses[index]
@@ -149,8 +174,11 @@ struct ContentView: View {
 }
 
 struct CurrencyPickerView: View {
+    // Привязка к выбранной валюте и состоянию отображения окна выбора валюты
     @Binding var selectedCurrency: String
     @Binding var showCurrencyPicker: Bool
+
+    // Список валют
     let currencies: [(String, String)]
 
     var body: some View {
