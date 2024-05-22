@@ -18,11 +18,14 @@ class Income: Identifiable {
     var amount: Double
     // Переменная category представляет собой категорию дохода.
     var category: String
+    // Переменная date представляет собой дату добавления расхода.
+    var date: Date
     
     // Инициализатор класса Income, который принимает два параметра: amount (сумма дохода) и category (категория дохода), и инициализирует соответствующие свойства.
-    init(amount: Double, category: String) {
+    init(amount: Double, category: String, date: Date = Date()) {
         self.amount = amount
         self.category = category
+        self.date = date
     }
 }
 
@@ -34,10 +37,14 @@ class Expense: Identifiable {
     var amount: Double
     // Переменная category представляет собой категорию расхода.
     var category: String
+    // Переменная date представляет собой дату добавления расхода.
+    var date: Date
+
     
     // Инициализатор класса Expense, который принимает два параметра: amount (сумма расхода) и category (категория расхода), и инициализирует соответствующие свойства.
-    init(amount: Double, category: String) {
+    init(amount: Double, category: String, date: Date = Date()) {
         self.amount = amount
         self.category = category
+        self.date = date
     }
 }
