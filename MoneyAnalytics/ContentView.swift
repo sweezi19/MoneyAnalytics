@@ -41,7 +41,7 @@ struct ContentView: View {
                     .font(.largeTitle)
                     .padding()
 
-                // Кнопки
+                // Кнопки для добавления доходов и расходов
                 HStack {
                     if isMenuOpen {
                         // Кнопка для добавления доходов
@@ -94,28 +94,35 @@ struct ContentView: View {
                         .foregroundColor(.gray)
                     Spacer()
                 } else {
+                    // Используем List для поддержки свайпа для удаления
                     List {
-                        // Отображение доходов
-                        ForEach(incomes) { income in
-                            HStack {
-                                Text("+\(income.amount, specifier: "%.2f") \(selectedCurrency)")
-                                    .foregroundColor(.green)
-                                Spacer()
-                            }
-                        }
-                        .onDelete(perform: deleteIncome)
+                        // Объединяем доходы и расходы в один список
+                        let transactions = (incomes.map { ("income", $0.date, $0.amount, $0.id) } + expenses.map { ("expense", $0.date, $0.amount, $0.id) })
+                            .sorted(by: { $0.1 > $1.1 })
 
-                        // Отображение расходов
-                        ForEach(expenses) { expense in
-                            NavigationLink(destination: ExpenseDetailView(amount: expense.amount, category: expense.category, currency: selectedCurrency)) {
+                        ForEach(transactions, id: \.3) { transaction in
+                            NavigationLink(destination: TransactionDetailView(type: transaction.0, amount: transaction.2, date: transaction.1, currency: selectedCurrency)) {
                                 HStack {
-                                    Text("-\(expense.amount, specifier: "%.2f") \(selectedCurrency)")
-                                        .foregroundColor(.red)
+                                    if transaction.0 == "income" {
+                                        Text("+\(transaction.2, specifier: "%.2f") \(selectedCurrency)")
+                                            .foregroundColor(.green)
+                                    } else {
+                                        Text("-\(transaction.2, specifier: "%.2f") \(selectedCurrency)")
+                                            .foregroundColor(.red)
+                                    }
                                     Spacer()
+                                    Text(transaction.1, style: .date)
+                                }
+                            }
+                            // Добавляем свайп действия для удаления транзакции
+                            .swipeActions {
+                                Button(role: .destructive) {
+                                    deleteTransaction(type: transaction.0, id: transaction.3, amount: transaction.2)
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
                                 }
                             }
                         }
-                        .onDelete(perform: deleteExpense)
                     }
                 }
             }
@@ -144,31 +151,23 @@ struct ContentView: View {
         }
     }
 
-    // Удаление дохода и обновление баланса
-    private func deleteIncome(at offsets: IndexSet) {
-        for index in offsets {
-            let income = incomes[index]
-            balance -= income.amount  // Вычитаем сумму из баланса
-            viewContext.delete(income)
+    // Удаление транзакции и обновление баланса
+    private func deleteTransaction(type: String, id: UUID, amount: Double) {
+        if type == "income" {
+            if let income = incomes.first(where: { $0.id == id }) {
+                balance -= income.amount  // Вычитаем сумму из баланса
+                viewContext.delete(income)
+            }
+        } else {
+            if let expense = expenses.first(where: { $0.id == id }) {
+                balance += expense.amount  // Возвращаем сумму на баланс
+                viewContext.delete(expense)
+            }
         }
         do {
             try viewContext.save()
         } catch {
-            print("Failed to delete income: \(error.localizedDescription)")
-        }
-    }
-
-    // Удаление расхода и обновление баланса
-    private func deleteExpense(at offsets: IndexSet) {
-        for index in offsets {
-            let expense = expenses[index]
-            balance += expense.amount  // Возвращаем сумму на баланс
-            viewContext.delete(expense)
-        }
-        do {
-            try viewContext.save()
-        } catch {
-            print("Failed to delete expense: \(error.localizedDescription)")
+            print("Failed to delete transaction: \(error.localizedDescription)")
         }
     }
 }
