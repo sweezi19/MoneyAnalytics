@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		913FB28D2BFF82DE001CD74B /* TransactionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 913FB28C2BFF82DE001CD74B /* TransactionDetailView.swift */; };
+		913FB2912C036178001CD74B /* ExpenseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 913FB2902C036178001CD74B /* ExpenseView.swift */; };
 		917182AE2BF80B50002E0797 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 917182AD2BF80B50002E0797 /* PersistenceController.swift */; };
 		918F2FDF2BF7BA530094F9F3 /* MoneyAnalyticsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 918F2FDE2BF7BA530094F9F3 /* MoneyAnalyticsApp.swift */; };
 		918F2FE12BF7BA530094F9F3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 918F2FE02BF7BA530094F9F3 /* ContentView.swift */; };
@@ -42,6 +43,7 @@
 
 /* Begin PBXFileReference section */
 		913FB28C2BFF82DE001CD74B /* TransactionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionDetailView.swift; sourceTree = "<group>"; };
+		913FB2902C036178001CD74B /* ExpenseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseView.swift; sourceTree = "<group>"; };
 		917182AD2BF80B50002E0797 /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
 		918F2FDB2BF7BA530094F9F3 /* MoneyAnalytics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MoneyAnalytics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		918F2FDE2BF7BA530094F9F3 /* MoneyAnalyticsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyAnalyticsApp.swift; sourceTree = "<group>"; };
@@ -119,6 +121,7 @@
 			children = (
 				918F2FDE2BF7BA530094F9F3 /* MoneyAnalyticsApp.swift */,
 				918F2FE02BF7BA530094F9F3 /* ContentView.swift */,
+				913FB2902C036178001CD74B /* ExpenseView.swift */,
 				913FB28C2BFF82DE001CD74B /* TransactionDetailView.swift */,
 				91D4D5822BFD50C90065C72B /* Сurrencies.swift */,
 				917182B62BF81324002E0797 /* Views */,
@@ -290,6 +293,7 @@
 				918F300D2BF7BC780094F9F3 /* AddExpenseView.swift in Sources */,
 				918F300F2BF7BD8B0094F9F3 /* AddIncomeView.swift in Sources */,
 				918F2FE32BF7BA530094F9F3 /* Item.swift in Sources */,
+				913FB2912C036178001CD74B /* ExpenseView.swift in Sources */,
 				91D4D5812BFD40710065C72B /* Models.swift in Sources */,
 				913FB28D2BFF82DE001CD74B /* TransactionDetailView.swift in Sources */,
 				918F2FDF2BF7BA530094F9F3 /* MoneyAnalyticsApp.swift in Sources */,

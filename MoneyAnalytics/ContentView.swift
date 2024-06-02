@@ -5,20 +5,18 @@
 //  Created by Theo Tar on 17/05/2024.
 //
 
-// Импортируем необходимые модули. SwiftUI используется для создания пользовательского интерфейса, а SwiftData для работы с базой данных и моделями.
 import SwiftUI
 import SwiftData
 
+// Главный вид приложения
 struct ContentView: View {
-    // Используем модельный контекст для работы с Core Data (или SwiftData)
+    // Используем модельный контекст для работы с базой данных
     @Environment(\.modelContext) private var viewContext
 
     // Переменная для хранения баланса
     @State private var balance: Double = 0.0
-
     // Переменная для хранения выбранной валюты
     @State private var selectedCurrency: String = "$"
-
     // Переменная для управления отображением окна выбора валюты
     @State private var showCurrencyPicker = false
 
@@ -29,9 +27,49 @@ struct ContentView: View {
     // Переменные для управления отображением окон добавления доходов и расходов
     @State private var showAddIncome = false
     @State private var showAddExpense = false
-
     // Переменная для управления состоянием меню добавления
     @State private var isMenuOpen = false
+
+    var body: some View {
+        // Создаем вкладки для навигации между HomeView и ExpenseView
+        TabView {
+            HomeView(
+                balance: $balance,
+                selectedCurrency: $selectedCurrency,
+                showCurrencyPicker: $showCurrencyPicker,
+                showAddIncome: $showAddIncome,
+                showAddExpense: $showAddExpense,
+                isMenuOpen: $isMenuOpen,
+                incomes: incomes,
+                expenses: expenses,
+                viewContext: viewContext
+            )
+            .tabItem {
+                Label("Home", systemImage: "house")
+            }
+
+            NavigationView {
+                ExpenseView(expenses: expenses, selectedCurrency: $selectedCurrency)
+            }
+            .tabItem {
+                Label("Expense", systemImage: "chart.pie")
+            }
+        }
+    }
+}
+
+// Вид для экрана Home
+struct HomeView: View {
+    @Binding var balance: Double
+    @Binding var selectedCurrency: String
+    @Binding var showCurrencyPicker: Bool
+    @Binding var showAddIncome: Bool
+    @Binding var showAddExpense: Bool
+    @Binding var isMenuOpen: Bool
+
+    var incomes: [Income]
+    var expenses: [Expense]
+    var viewContext: ModelContext
 
     var body: some View {
         NavigationView {
@@ -56,7 +94,7 @@ struct ContentView: View {
                                 .padding(.trailing, 10)
                         }
                     }
-                    // Кнопка (+)
+                    // Кнопка для открытия/закрытия меню
                     Button(action: {
                         withAnimation {
                             isMenuOpen.toggle()
@@ -94,13 +132,13 @@ struct ContentView: View {
                         .foregroundColor(.gray)
                     Spacer()
                 } else {
-                    // Используем List для поддержки свайпа для удаления
                     List {
                         // Объединяем доходы и расходы в один список
                         let transactions = (incomes.map { ("income", $0.date, $0.amount, $0.id) } + expenses.map { ("expense", $0.date, $0.amount, $0.id) })
                             .sorted(by: { $0.1 > $1.1 })
 
                         ForEach(transactions, id: \.3) { transaction in
+                            // Ссылка на экран деталей транзакции
                             NavigationLink(destination: TransactionDetailView(type: transaction.0, amount: transaction.2, date: transaction.1, currency: selectedCurrency)) {
                                 HStack {
                                     if transaction.0 == "income" {
@@ -114,7 +152,7 @@ struct ContentView: View {
                                     Text(transaction.1, style: .date)
                                 }
                             }
-                            // Добавляем свайп действия для удаления транзакции
+                            // Добавляем действие для свайпа для удаления транзакции
                             .swipeActions {
                                 Button(role: .destructive) {
                                     deleteTransaction(type: transaction.0, id: transaction.3, amount: transaction.2)
@@ -151,16 +189,16 @@ struct ContentView: View {
         }
     }
 
-    // Удаление транзакции и обновление баланса
+    // Функция для удаления транзакции и обновления баланса
     private func deleteTransaction(type: String, id: UUID, amount: Double) {
         if type == "income" {
             if let income = incomes.first(where: { $0.id == id }) {
-                balance -= income.amount  // Вычитаем сумму из баланса
+                balance -= income.amount
                 viewContext.delete(income)
             }
         } else {
             if let expense = expenses.first(where: { $0.id == id }) {
-                balance += expense.amount  // Возвращаем сумму на баланс
+                balance += expense.amount
                 viewContext.delete(expense)
             }
         }
@@ -172,8 +210,8 @@ struct ContentView: View {
     }
 }
 
+// Вид для выбора валюты
 struct CurrencyPickerView: View {
-    // Привязка к выбранной валюте и состоянию отображения окна выбора валюты
     @Binding var selectedCurrency: String
     @Binding var showCurrencyPicker: Bool
 
@@ -202,6 +240,7 @@ struct CurrencyPickerView: View {
     }
 }
 
+// Превью для ContentView
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
