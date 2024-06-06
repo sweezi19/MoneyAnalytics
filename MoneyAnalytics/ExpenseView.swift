@@ -82,6 +82,7 @@ struct ExpenseBarChart: View {
     }
 }
 
+// Вид для отображения расходов по категории
 struct CategoryDetailView: View {
     var expenses: [Expense]
     var category: String
@@ -90,11 +91,13 @@ struct CategoryDetailView: View {
     var body: some View {
         List {
             ForEach(expenses, id: \.id) { expense in
-                HStack {
-                    Text(expense.date, style: .date)
-                    Spacer()
-                    Text("-\(expense.amount, specifier: "%.2f") \(selectedCurrency)")
-                        .foregroundColor(.red)
+                NavigationLink(destination: TransactionDetailView(type: "expense", amount: expense.amount, date: expense.date, currency: selectedCurrency)) {
+                    HStack {
+                        Text(expense.date, style: .date)
+                        Spacer()
+                        Text("-\(expense.amount, specifier: "%.2f") \(selectedCurrency)")
+                            .foregroundColor(.red)
+                    }
                 }
             }
         }

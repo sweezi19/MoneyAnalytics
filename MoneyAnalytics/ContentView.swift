@@ -52,7 +52,7 @@ struct ContentView: View {
                 ExpenseView(expenses: expenses, selectedCurrency: $selectedCurrency)
             }
             .tabItem {
-                Label("Expense", systemImage: "chart.pie")
+                Label("Expense", systemImage: "chart.bar.xaxis")
             }
         }
     }
